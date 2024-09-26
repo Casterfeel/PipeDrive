@@ -1,23 +1,40 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Header from './components/header';
+import Sidebar from './components/sidebar';
+import Iframe from './components/iframe';
+import SuccessModal from './components/successModal';
 
 function App() {
+  const [isFrameVisible, setIsFrameVisible] = useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [dealId, setDealId] = useState('https://mycompany19.pipedrive.com/deal');
+
+
+  const handleOpenFrame = () => {
+    setIsFrameVisible(true);
+  }
+
+  const handleCloseFrame = () => {
+    setIsFrameVisible(false);
+  }
+
+  const handleSuccess = (id) => {
+    setIsSuccessModalVisible(true);
+    handleCloseFrame();
+    setDealId(id)
+  }
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalVisible(false);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Sidebar onOpen = {handleOpenFrame}/>
+      {isFrameVisible && <Iframe onClose = {handleCloseFrame} onSuccess = {handleSuccess}/>}
+      {isSuccessModalVisible && <SuccessModal onClose={handleCloseSuccessModal} dealId={dealId}/>}
     </div>
   );
 }
